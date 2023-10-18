@@ -31,20 +31,22 @@ class DoublyOrderedList:
         if self.head is None:
             self.head = new_node
             self.tail = new_node
-        elif self.head.next_node is None:
-            self.head.next_node = new_node
+        elif value < self.head.value:
+            new_node.next_node = self.head
+            self.head.prev_node = new_node
+            self.head = new_node
+        elif value > self.tail.value:
+            self.tail.next_node = new_node
+            new_node.prev_node = self.tail
             self.tail = new_node
-            new_node.prev_node = self.head
         else:
-            while current_node.next_node is not None:
-                if current_node.next_node.value > new_node.value or current_node.next_node is None:
-                    new_node.prev_node = current_node
-                    new_node.next_node = current_node.next_node
-                    if current_node.next_node is not None:
-                        current_node.next_node.prev_node = new_node
-                    current_node.next_node = new_node
-                    if new_node.next_node is None:
-                        self.tail = new_node
+            while current_node.next_node is not None: # value = 13, cur.next.value = 15
+                if current_node.next_node.value > new_node.value: # yes, 15 > 13
+                    new_node.prev_node = current_node # point 13 to head
+                    new_node.next_node = current_node.next_node # point 13 to tail
+                    current_node.next_node.prev_node = new_node # point tail to 13
+                    current_node.next_node = new_node # point head to 13
+                    break
                 else:
                     current_node = current_node.next_node
 
@@ -117,7 +119,7 @@ class DoublyOrderedList:
                     current_node.next_node.prev_node = current_node.prev_node
                 else:
                     self.tail = current_node.prev_node
-                    self.tail.nextNode = None
+                    self.tail.next_node = None
                 return current_node.value
             else:
                 current_index += 1
@@ -151,7 +153,6 @@ class DoublyOrderedList:
             result.append(cur_node.value)
             cur_node = cur_node.next_node
         return result
-
 
     # TODO
     def python_list_reversed(self):
