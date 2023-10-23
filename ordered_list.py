@@ -102,16 +102,17 @@ class DoublyOrderedList:
         # If index is negative or >= size of list, raises IndexError
         # MUST have O(n) average-case performance
         current_node = self.head
-        current_index = 0
         if index == 0:
+            if self.head == self.tail:
+                del self.tail
+                del self.head
             if current_node.next_node is not None:
                 self.head = current_node.next_node
-            self.head.prev_node = None
-            temp = self.head.value
-            del self.head
-            del self.tail
-            return temp
+                self.head.prev_node = None
+            current_node.next_node = None
+            return current_node.value
             # return current_node.value
+        current_index = 0
         while current_node is not None:
             if current_index == index:
                 if current_node.next_node is not None:
@@ -154,15 +155,25 @@ class DoublyOrderedList:
             cur_node = cur_node.next_node
         return result
 
-    # TODO
     def python_list_reversed(self):
         # Return a Python list representation of OrderedList, from tail to head, using
         # recursion
         # For example, list with integers 1, 2, and 3 would return [3, 2, 1]
         # To practice recursion, this method must call a RECURSIVE method that
         # will return a reversed list
-        # MUST have O(n) performance'''
-        pass
+        # MUST have O(n) performance"""
+        cur_node = self.head
+        return self._py_list_rev_recursive(cur_node)
+
+    def _py_list_rev_recursive(self, cur_node):
+        the_list = []
+        old_list = []
+        if cur_node.next_node is not None:
+            old_list = self._py_list_rev_recursive(cur_node.next_node)
+        for i in range(len(old_list)):
+            the_list.append(old_list[i])
+        the_list.append(cur_node.value)
+        return the_list
 
     def size(self):
         cur_node = self.head  # Start at head
